@@ -8,6 +8,7 @@ const loading = ref([true, true])
 const terminals = ref(null)
 const states = ref(null)
 const timer = ref(null)
+const timestamp = ref(undefined)
 
 onMounted(() => {
     loading_terminals()
@@ -33,6 +34,7 @@ function loading_states() {
     .then(d => {
         states.value = d
         loading.value[1] = false
+        timestamp.value = new Date().toLocaleTimeString()
     })
     .catch(err => console.error("Loading states:", err))
 }
@@ -59,6 +61,8 @@ function get_state(rja_id) {
                     />
                 </Sector>
             </Terminal>
+
+            <small>Stan z: {{ timestamp }}</small>
         </template>
     </div>
 </template>
