@@ -5,7 +5,7 @@ const props = defineProps(['name'])
 <template>
     <div class="card">
         <div class="card-body">
-            <div class="terminal-name">{{ name }}</div>
+            <div class="terminal-name">{{ props.name }}</div>
             <div class="terminal-body">
                 <slot />
             </div>

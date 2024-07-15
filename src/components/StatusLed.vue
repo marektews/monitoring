@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from 'vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+ import { faRoute, faBus, faPaperPlane, faSquareParking, faCircleQuestion, faArrowRightRotate, faBell } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps(['status'])
 
@@ -10,15 +12,29 @@ const status_color_class = computed(() => {
         case 'second-circle': return "text-warning"
         case 'send-to-sector': return "text-success"
         case 'on-sector': return "text-danger"
+        case 'ready-to-leave': return "text-warning"
         case 'on-the-road': return "text-success"
     }
     return "text-secondary"
+})
+
+const status_icon = computed(() => {
+    switch(props.status) {
+        case 'no-bus': return faCircleQuestion
+        case 'in-buffer': return faBus
+        case 'second-circle': return faArrowRightRotate
+        case 'send-to-sector': return faPaperPlane
+        case 'on-sector': return faSquareParking
+        case 'ready-to-leave': return faBell
+        case 'on-the-road': return faRoute
+    }
+    return faCircleQuestion
 })
 </script>
 
 <template>
     <div :class="status_color_class" class="sl-cnt">
-        <i :class="props.status" />
+        <FontAwesomeIcon :icon="status_icon" />
     </div>
 </template>
 
@@ -26,10 +42,10 @@ const status_color_class = computed(() => {
 .sl-cnt {
     min-width: 17px;
 }
-.no-bus::before {
+/* .no-bus::before {
     font: var(--fa-font-regular);
-    /* content: "\f059"; */
-    /* content: "\e4e3"; */
+    /* content: "\f059"; * /
+    /* content: "\e4e3"; * /
 }
 
 .in-buffer:before {
@@ -55,6 +71,6 @@ const status_color_class = computed(() => {
 .on-the-road:before {
     font: var(--fa-font-solid);
     content: "\f4d7";
-}
+} */
 
 </style>

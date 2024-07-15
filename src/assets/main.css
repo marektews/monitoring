@@ -3,9 +3,3 @@
 body {
     padding: 16pt;
 }
-
-@media (prefers-color-scheme: dark) { 
-    .card {
-        --bs-card-bg: var(--color-background-soft) !important;
-    }
-}

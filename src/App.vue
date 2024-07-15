@@ -1,14 +1,16 @@
 <script setup>
-import SOA from './views/SOA.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
+import SoaView from './views/SoaView.vue'
 </script>
 
 <template>
     <header>
-        <i class="fa-solid fa-wave-square fa-shake" />
-        <div>Monitor</div>
+        <FontAwesomeIcon :icon="faWaveSquare" :shake="true" />
+        <div>Monitoring</div>
     </header>
     <main>
-        <SOA />
+        <SoaView />
     </main>
 </template>
 
