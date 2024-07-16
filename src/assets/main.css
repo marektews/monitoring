@@ -2,4 +2,5 @@
 
 body {
     padding: 16pt;
+    user-select: none;
 }
