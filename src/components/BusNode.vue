@@ -6,7 +6,7 @@ const props = defineProps(['rja', 'state'])
 <template>
     <div class="bus-container">
         <StatusLed :status="props.state?.status"/>
-        <div>{{ props.rja?.ident }} - {{ props.rja?.name }}</div>
+        <div>{{ props.rja?.ident }} - {{ props.rja?.name }} {{ props.rja?.lp }}</div>
     </div>
 </template>
 
