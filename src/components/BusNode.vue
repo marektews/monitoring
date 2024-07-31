@@ -1,14 +1,16 @@
-<script setup>
-import StatusLed from './StatusLed.vue'
-const props = defineProps(['rja', 'state'])
-</script>
-
 <template>
     <div class="bus-container">
         <StatusLed :status="props.state?.status"/>
         <div>{{ props.rja?.ident }} - {{ props.rja?.name }} {{ props.rja?.lp }}</div>
     </div>
 </template>
+
+
+<script setup>
+import StatusLed from './StatusLed.vue'
+const props = defineProps(['rja', 'state'])
+</script>
+
 
 <style scoped>
 .bus-container {
