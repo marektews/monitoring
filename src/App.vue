@@ -5,34 +5,31 @@
             <div>Monitoring</div>
         </div>
 
-        <div class="radio-group">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="tura" id="w2" :value="2" v-model="tura">
-                <label class="form-check-label" for="w2">
-                    W2
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="tura" id="w3" :value="3" v-model="tura">
-                <label class="form-check-label" for="w3">
-                    W3
-                </label>
-            </div>
+        <div v-if="tura" class="tura-label" :title="tura.name">
+            {{ tura.shortcut }}
         </div>
     </header>
     <main>
-        <SoaView :tura="tura" />
+        <SoaView />
     </main>
 </template>
 
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 import SoaView from './views/SoaView.vue'
 
-const tura = ref(2)
+// aktywna tura wyznaczana przez serwer (filozofia gokongres)
+const tura = ref(null)
+
+onMounted(() => {
+    fetch('/api/config/active/tura')
+    .then(response => response.status === 200 ? response.json() : null)
+    .then(d => { tura.value = d })
+    .catch(err => console.error('Loading active tura:', err))
+})
 
 </script>
 
@@ -54,9 +51,8 @@ header {
     font-size: 20pt;
 }
 
-.radio-group {
-    display: flex;
-    flex-direction: row;
-    gap: 9pt;
+.tura-label {
+    font-size: 16pt;
+    font-weight: bold;
 }
 </style>

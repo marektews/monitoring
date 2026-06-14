@@ -9,13 +9,10 @@
         <template v-else>
             <TerminalNode v-for="(term, idx1) in terminals" :key="idx1" :name="term.name">
                 <SectorNode v-for="(sec, idx2) in term.sectors" :key="idx2" :name="sec.name">
-                    <template v-for="(rja, idx3) in sec.rja" :key="idx3">
-                        <BusNode 
-                            v-if="props.tura === rja.ztura"
-                            :rja="rja" 
-                            :state="get_state(rja.id)"
-                        />
-                    </template>
+                    <BusNode v-for="(rja, idx3) in sec.rja" :key="idx3"
+                        :rja="rja"
+                        :state="get_state(rja.id)"
+                    />
                 </SectorNode>
             </TerminalNode>
 
@@ -58,10 +55,6 @@ import TerminalNode from '../components/TerminalNode.vue';
 import SectorNode from '../components/SectorNode.vue';
 import BusNode from '../components/BusNode.vue';
 import StatusLed from '@/components/StatusLed.vue';
-
-const props = defineProps({
-    tura: { type: Number, required: true },
-})
 
 const loading = ref([true, true])
 const terminals = ref(null)
