@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig(({ command, mode }) => {
     const isProduction = command === 'build';
     return {
-        base: isProduction ? '/monitoring/' : '/',
+        base: isProduction ? '/admin/monitoring/' : '/',
         publicDir: '../shared',
         server: {
             https: false,
