@@ -76,7 +76,10 @@ function loading_terminals() {
         terminals.value = d
         loading.value[0] = false
     })
-    .catch(err => console.error("Loading terminals static info:", err))
+    .catch(err => {
+        console.error("Loading terminals static info:", err)
+        loading.value[0] = false
+    })
 }
 
 // pobieranie statusów wszystkiego
@@ -93,11 +96,14 @@ function loading_states() {
         loading.value[1] = false
         timestamp.value = new Date().toLocaleTimeString()
     })
-    .catch(err => console.error("Loading states:", err))
+    .catch(err => {
+        console.error("Loading states:", err)
+        loading.value[1] = false
+    })
 }
 
 function get_state(rja_id) {
-    return states.value[rja_id]
+    return states.value ? states.value[rja_id] : undefined
 }
 </script>
 
