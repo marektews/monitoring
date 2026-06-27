@@ -50,11 +50,12 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import TerminalNode from '../components/TerminalNode.vue';
 import SectorNode from '../components/SectorNode.vue';
 import BusNode from '../components/BusNode.vue';
 import StatusLed from '@/components/StatusLed.vue';
+import { useOdprawaSocket } from '@/composables/useOdprawaSocket.js';
 
 const loading = ref([true, true])
 const terminals = ref(null)
@@ -62,10 +63,32 @@ const states = ref(null)
 const timer = ref(null)
 const timestamp = ref(undefined)
 
+// tematy WS budowane z listy terminali: buffer:<name> rozwija się po stronie
+// backendu na sector:<sid> wszystkich sektorów terminala
+const ws_topics = ref([])
+let socket = null
+
 onMounted(() => {
+    // Kanał główny: WebSocket. Tematy podajemy getterem, bo lista terminali
+    // ładuje się asynchronicznie — po jej pobraniu wołamy socket.resubscribe().
+    socket = useOdprawaSocket(() => ws_topics.value, apply_ws_state, loading_states)
+
     loading_terminals()
     loading_states()
-    timer.value = setInterval(loading_states, 20000)
+
+    // Siatka bezpieczeństwa: wolny polling tylko gdy WS jest rozłączony
+    timer.value = setInterval(() => {
+        if (!socket.isConnected.value)
+            loading_states()
+    }, 60000)
+})
+
+onBeforeUnmount(() => {
+    if (timer.value != null) {
+        clearInterval(timer.value)
+        timer.value = null
+    }
+    // socket sprząta się sam przez własny onBeforeUnmount
 })
 
 // pobieranie listy terminali, sektorów i ich busów
@@ -74,6 +97,8 @@ function loading_terminals() {
     .then(response => response.json())
     .then(d => {
         terminals.value = d
+        ws_topics.value = d.map(t => 'buffer:' + t.name)
+        if (socket) socket.resubscribe()
         loading.value[0] = false
     })
     .catch(err => {
@@ -100,6 +125,18 @@ function loading_states() {
         console.error("Loading states:", err)
         loading.value[1] = false
     })
+}
+
+// aktualizacja stanu pojedynczego autokaru z ramki WebSocket
+function apply_ws_state(json) {
+    // przed pierwszym pełnym fetchem stanów pomijamy — loading_states i tak uzupełni
+    if (states.value == null)
+        return
+    states.value[json.rja_id] = {
+        status: json.status,
+        ts: json.ts
+    }
+    timestamp.value = new Date().toLocaleTimeString()
 }
 
 function get_state(rja_id) {
