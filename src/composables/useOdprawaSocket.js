@@ -10,9 +10,11 @@ import { ref, onBeforeUnmount } from 'vue'
  *        wołane dla każdej ramki type==='state'
  * @param {() => void} [onReconnect]
  *        wołane po (re)nawiązaniu połączenia — służy do rekoncyliacji (pełny fetch stanów)
+ * @param {(state: {parking: string, id: string, pass_nr: number, used: boolean, ts: string}) => void} [onParking]
+ *        wołane dla każdej ramki type==='parking' (zajętość identyfikatorów parkingowych)
  * @returns {{ isConnected: import('vue').Ref<boolean>, resubscribe: () => void, close: () => void }}
  */
-export function useOdprawaSocket(topics, onState, onReconnect) {
+export function useOdprawaSocket(topics, onState, onReconnect, onParking) {
     const isConnected = ref(false)
 
     let ws = null
@@ -64,6 +66,9 @@ export function useOdprawaSocket(topics, onState, onReconnect) {
             }
             if (msg.type === 'state' && onState) {
                 onState({ rja_id: msg.rja_id, status: msg.status, ts: msg.ts })
+            }
+            if (msg.type === 'parking' && onParking) {
+                onParking({ parking: msg.parking, id: msg.id, pass_nr: msg.pass_nr, used: msg.used, ts: msg.ts })
             }
         }
 

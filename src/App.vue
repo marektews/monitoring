@@ -9,8 +9,25 @@
             {{ tura.shortcut }}
         </div>
     </header>
+
+    <!-- Belka przełączania widoków; v-if odmontowuje nieaktywne widoki,
+         dzięki czemu nie trzymają własnych połączeń WS ani pollingu -->
+    <nav class="view-switch nav nav-pills">
+        <button class="nav-link" :class="{ active: view === 'soa' }" @click="view = 'soa'">
+            Odprawa autokarów
+        </button>
+        <button class="nav-link" :class="{ active: view === 'srp' }" @click="view = 'srp'">
+            Parking niepełnosprawnych
+        </button>
+        <button class="nav-link" :class="{ active: view === 'pk' }" @click="view = 'pk'">
+            Parking działów
+        </button>
+    </nav>
+
     <main>
-        <SoaView />
+        <SoaView v-if="view === 'soa'" />
+        <SrpParkingView v-else-if="view === 'srp'" />
+        <PkParkingView v-else />
     </main>
 </template>
 
@@ -20,6 +37,10 @@ import { ref, onMounted } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 import SoaView from './views/SoaView.vue'
+import SrpParkingView from './views/SrpParkingView.vue'
+import PkParkingView from './views/PkParkingView.vue'
+
+const view = ref('soa')
 
 // aktywna tura wyznaczana przez serwer (filozofia gokongres)
 const tura = ref(null)
@@ -54,5 +75,10 @@ header {
 .tura-label {
     font-size: 16pt;
     font-weight: bold;
+}
+
+.view-switch {
+    padding: 6pt 6pt 0 6pt;
+    gap: 4pt;
 }
 </style>
