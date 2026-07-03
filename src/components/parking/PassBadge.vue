@@ -1,11 +1,23 @@
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps(['pass'])
+
+// SRP numeruje identyfikatory per zbór — etykieta "nr zboru/nr id";
+// PK (bez pola zbor) pokazuje sam numer, bo widok grupuje po działach
+const label = computed(() =>
+    props.pass.zbor ? `${props.pass.zbor}/${props.pass.nr}` : props.pass.nr
+)
+
+const title = computed(() => {
+    const state = props.pass.used ? 'wjazd: ' + (props.pass.ts ?? '') : 'wolny'
+    return props.pass.zbor_name ? `${props.pass.zbor_name} — ${state}` : state
+})
 </script>
 
 <template>
-    <div class="pass-badge" :class="props.pass.used ? 'pass-used' : 'pass-free'"
-        :title="props.pass.used ? 'wjazd: ' + (props.pass.ts ?? '') : 'wolny'">
-        {{ props.pass.nr }}
+    <div class="pass-badge" :class="props.pass.used ? 'pass-used' : 'pass-free'" :title="title">
+        {{ label }}
     </div>
 </template>
 

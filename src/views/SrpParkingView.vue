@@ -25,10 +25,10 @@
                 <div class="card-body">
                     <div class="card-title">LEGENDA</div>
                     <div class="legend-row">
-                        <PassBadge :pass="{ nr: 1, used: false }" /> - identyfikator wolny
+                        <PassBadge :pass="{ zbor: 100, nr: 1, used: false }" /> - nr zboru/nr identyfikatora — wolny
                     </div>
                     <div class="legend-row">
-                        <PassBadge :pass="{ nr: 2, used: true }" /> - identyfikator użyty (pojazd na parkingu)
+                        <PassBadge :pass="{ zbor: 100, nr: 2, used: true }" /> - nr zboru/nr identyfikatora — użyty (pojazd na parkingu)
                     </div>
                 </div>
             </div>
